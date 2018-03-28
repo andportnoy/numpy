@@ -7,7 +7,7 @@ import fnmatch
 import itertools
 
 import numpy.core.umath as ncu
-from numpy.core import umath_tests as ncu_tests
+from numpy.core import _umath_tests as ncu_tests
 import numpy as np
 from numpy.testing import (
     run_module_suite, assert_, assert_equal, assert_raises,
@@ -24,10 +24,10 @@ def on_powerpc():
 
 
 class _FilterInvalids(object):
-    def setUp(self):
+    def setup(self):
         self.olderr = np.seterr(invalid='ignore')
 
-    def tearDown(self):
+    def teardown(self):
         np.seterr(**self.olderr)
 
 

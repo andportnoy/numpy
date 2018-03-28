@@ -6,26 +6,12 @@ import functools
 import operator
 
 import numpy as np
-from numpy.core.multiarray_tests import array_indexing
+from numpy.core._multiarray_tests import array_indexing
 from itertools import product
 from numpy.testing import (
     run_module_suite, assert_, assert_equal, assert_raises,
     assert_array_equal, assert_warns, dec, HAS_REFCOUNT, suppress_warnings,
 )
-
-
-try:
-    cdll = None
-    if hasattr(sys, 'gettotalrefcount'):
-        try:
-            cdll = np.ctypeslib.load_library('multiarray_d', np.core.multiarray.__file__)
-        except OSError:
-            pass
-    if cdll is None:
-        cdll = np.ctypeslib.load_library('multiarray', np.core.multiarray.__file__)
-    _HAS_CTYPE = True
-except ImportError:
-    _HAS_CTYPE = False
 
 
 class TestIndexing(object):
@@ -513,7 +499,7 @@ class TestIndexing(object):
         arro = np.zeros((4, 4))
         arr = arro[::-1, ::-1]
 
-        slices = [slice(None), [0, 1, 2, 3]]
+        slices = (slice(None), [0, 1, 2, 3])
         arr[slices] = 10
         assert_array_equal(arr, 10.)
 
@@ -622,7 +608,7 @@ class TestSubclasses(object):
         assert_array_equal(new_s.finalize_status, new_s)
         assert_array_equal(new_s.old, s)
 
-    @dec.skipif(not HAS_REFCOUNT)
+    @dec._needs_refcount
     def test_slice_decref_getsetslice(self):
         # See gh-10066, a temporary slice object should be discarted.
         # This test is only really interesting on Python 2 since

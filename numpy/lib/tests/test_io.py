@@ -22,7 +22,7 @@ from numpy.ma.testutils import assert_equal
 from numpy.testing import (
     run_module_suite, assert_warns, assert_, SkipTest,
     assert_raises_regex, assert_raises, assert_allclose,
-    assert_array_equal, temppath, tempdir, dec, IS_PYPY, suppress_warnings
+    assert_array_equal, temppath, tempdir, dec, IS_PYPY, suppress_warnings,
 )
 
 
@@ -599,11 +599,11 @@ class LoadTxtBase(object):
 class TestLoadTxt(LoadTxtBase):
     loadfunc = staticmethod(np.loadtxt)
 
-    def setUp(self):
+    def setup(self):
         # lower chunksize for testing
         self.orig_chunk = np.lib.npyio._loadtxt_chunksize
         np.lib.npyio._loadtxt_chunksize = 1
-    def tearDown(self):
+    def teardown(self):
         np.lib.npyio._loadtxt_chunksize = self.orig_chunk
 
     def test_record(self):
@@ -2364,6 +2364,7 @@ def test_npzfile_dict():
     assert_('x' in z.keys())
 
 
+@dec._needs_refcount
 def test_load_refcount():
     # Check that objects returned by np.load are directly freed based on
     # their refcount, rather than needing the gc to collect them.
